@@ -24,6 +24,7 @@ class GelfHttpAppender extends BaseDioLogSender {
     this.toLogLevel = _defaultToSyslogLevel,
     super.formatter,
     super.bufferSize,
+    super.headers,
   });
 
   final String endpoint;
@@ -71,14 +72,14 @@ class GelfHttpAppender extends BaseDioLogSender {
         .map((e) => json.encode(e))
         .join('\n');
     return _client
-        .post<dynamic>(
-          endpoint,
-          cancelToken: cancelToken,
-          data: body,
-        )
+        .post<dynamic>(endpoint,
+            cancelToken: cancelToken,
+            data: body,
+            options: Options(
+              headers: super.headers,
+            ))
         .then(
           (response) => Future<void>.value(null),
-//      _logger.finest('sent logs.');
         )
         .catchError((Object err, StackTrace stackTrace) {
       String? message;

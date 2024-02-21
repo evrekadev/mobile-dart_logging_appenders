@@ -19,6 +19,7 @@ abstract class BaseLogSender extends BaseLogAppender {
   BaseLogSender({
     LogRecordFormatter? formatter,
     int? bufferSize,
+    this.headers,
   })  : bufferSize = bufferSize ?? 500,
         super(formatter);
 
@@ -36,6 +37,8 @@ abstract class BaseLogSender extends BaseLogAppender {
   set userProperties(Map<String, String> userProperties) {
     _userProperties = userProperties;
   }
+
+  Map<String, dynamic>? headers;
 
   Future<void> log(Level logLevel, DateTime time, String line,
       Map<String, String> lineLabels) {
@@ -100,6 +103,7 @@ abstract class BaseDioLogSender extends BaseLogSender {
   BaseDioLogSender({
     super.formatter,
     super.bufferSize,
+    super.headers,
   });
 
   Future<void> sendLogEventsWithDio(List<LogEntry> entries,
